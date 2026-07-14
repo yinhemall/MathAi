@@ -38,25 +38,27 @@ export default function App() {
 
     const API_KEY = import.meta.env.VITE_GROQ_API_KEY; 
 
-    // 🔥 強大的系統防護護欄，拒絕非數學問題
+    // 🔥 強大的系統防護護欄，並強制要求繁體中文輸出
     const systemPrompt = `You are a world-class Mathematical AI Engine. 
     CRITICAL SECURITY RULE: You can ONLY solve math, physics, or highly logical problems. 
-    If the user's input (text or image) is NOT a math-related problem (e.g., general chatting, programming questions, history, jokes, casual greetings, etc.), you MUST reject it completely.
+    LANGUAGE RULE: You MUST always respond in TRADITIONAL CHINESE (繁體中文).
+    
+    If the user's input (text or image) is NOT a math-related problem, you MUST reject it completely.
 
     You MUST return ONLY a strict JSON object.
 
-    IF the input IS a math problem, return this format:
+    IF the input IS a math problem, return this format (in Traditional Chinese):
     {
       "problem_restatement": "Restated math problem in LaTeX",
-      "steps": ["Step 1 explanation \\\\(LaTeX formula\\\\)", "Step 2..."],
+      "steps": ["Step 1 explanation in Traditional Chinese \\\\(LaTeX formula\\\\)", "Step 2..."],
       "final_answer": "Final LaTeX answer only"
     }
 
-    IF the input is NOT a math problem, you MUST return exactly this JSON to simulate a system firewall block:
+    IF the input is NOT a math problem, you MUST return exactly this JSON:
     {
-      "problem_restatement": "\\\\text{SYSTEM_WARNING: Non-Mathematical Query Detected}",
-      "steps": ["錯誤代碼 0x4F：偵測到非數學或數理邏輯相關的無效指令。", "本量子引擎算力僅限用於高等數學、微積分與物理演算法。", "連線請求已被防火牆主動攔截並阻斷。"],
-      "final_answer": "\\\\text{ACCESS_DENIED}"
+      "problem_restatement": "\\\\text{系統警告：偵測到非數學查詢}",
+      "steps": ["錯誤代碼 0x4F：本量子引擎僅限用於高等數學、微積分與物理演算。"],
+      "final_answer": "\\\\text{拒絕存取}"
     }
     
     Do not use Markdown blocks (\`\`\`) outside the JSON. Return pure JSON.`;
@@ -65,7 +67,7 @@ export default function App() {
       if (!API_KEY) throw new Error("API Key 未設定 (請檢查環境變數)");
 
       let messages = [{ role: "system", content: systemPrompt }];
-      let model = "llama-3.3-70b-versatile";
+      let model = "llama-3.3-70b-versatile"; // 使用最新模型
 
       if (image) {
         // 若有圖片，切換到 Groq 的視覺模型
@@ -109,7 +111,7 @@ export default function App() {
 
     } catch (error) {
       console.error("解題失敗:", error);
-      // 🔥 修改處：直接在頁面上顯示具體錯誤原因，方便你在手機端除錯
+      // 🔥 修改處：直接在頁面上顯示具體錯誤原因
       setResult({
         problem_restatement: "\\text{SYSTEM_ERROR_DEBUG}",
         steps: [
