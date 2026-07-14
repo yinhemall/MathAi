@@ -65,7 +65,7 @@ export default function App() {
       if (!API_KEY) throw new Error("API Key 未設定 (請檢查環境變數)");
 
       let messages = [{ role: "system", content: systemPrompt }];
-      let model = "llama3-70b-8192"; // 預設使用超強邏輯文字模型
+      let model = "llama-3.3-70b-versatile";
 
       if (image) {
         // 若有圖片，切換到 Groq 的視覺模型
