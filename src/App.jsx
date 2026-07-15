@@ -71,7 +71,7 @@ export default function App() {
 
       if (image) {
         // 若有圖片，切換到 Groq 的視覺模型
-        model = "llama-3.2-11b-vision-preview";
+        model = "llama-3.2-11b-vision-instruct";
         messages.push({
           role: "user",
           content: [
